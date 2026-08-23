@@ -1,5 +1,5 @@
 ---
-metadata: cito-prompts version 0.60.0
+metadata: cito-prompts version 0.61.0
 name: cito-design
 description: "Mode for turning an intention into a design doc under work/."
 ---

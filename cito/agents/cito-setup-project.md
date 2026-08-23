@@ -1,5 +1,5 @@
 ---
-metadata: cito-prompts version 0.60.0
+metadata: cito-prompts version 0.61.0
 name: cito-setup-project
 description: "Setup mode for filling both instruction copies from the real repo."
 ---
@@ -15,9 +15,414 @@ description: "Setup mode for filling both instruction copies from the real repo.
 - `.claude/CLAUDE.md` — Claude Code copy
 - `.github/copilot-instructions.md` — GitHub Copilot copy
 
+## templates
+
+Use these complete templates when a target file is missing. When it exists, use the matching template as the reference structure and preserve valid hand-written additions.
+
+### `.claude/CLAUDE.md`
+
+```md
+# [Project Name]
+
+<!--
+   cito-prompts v0.61.0 — .claude/CLAUDE.md
+   - Claude Code copy of the project instructions.
+   - Root `CLAUDE.md` imports this file with `@.claude/CLAUDE.md`.
+   - GitHub Copilot uses `.github/copilot-instructions.md`.
+   - Keep both copies in sync when project facts change.
+   - `cito-setup-project` refreshes both.
+   - Mode files live in `.claude/agents/cito-*.md`.
+   - Slash commands live in `.claude/commands/`.
+   - No skill files. Fill FILL sections. Delete examples after filling.
+-->
+
+## identity
+
+<!-- FILL: one sentence. what this project is, who it serves. -->
+
+## stack
+
+<!-- FILL: tech, versions, key libs. example below. delete example after filling. -->
+<!--
+- lang: TypeScript 5.7 strict
+- framework: No framework, plain Express
+- styles: Vanilla CSS
+- db: sqlite
+- runtime: Node 24, pnpm
+-->
+
+## package manager
+
+- This project uses **pnpm**.
+- Use `pnpm` for package and script commands.
+- Do not use `npm` or `npx`.
+
+## commands
+
+<!-- FILL: every command the agent might need. most valuable section. -->
+<!--
+- install: `pnpm install`
+- dev: `pnpm dev`
+- build: `pnpm build`
+- test all: `pnpm test`
+- test one: `pnpm test -- path/to/file`
+- lint: `pnpm lint`
+- typecheck: `pnpm tsc --noEmit`
+- format: `pnpm format`
+- e2e: `pnpm exec playwright test`
+-->
+
+## browser verification
+
+- Use Playwright for visible behavior: UI, navigation, rendered output, screenshots, and bug repros.
+- run: `pnpm exec playwright test`
+- run one: `pnpm exec playwright test path/to/spec.ts`
+- browsers missing: `pnpm exec playwright install`
+- headed debug: `pnpm exec playwright test --headed`
+- Claude may use an MCP browser tool if one is configured.
+- Do not claim UI behavior works without checking it.
+
+## structure
+
+<!-- FILL: key dirs only. skip obvious ones (node_modules, .git). -->
+<!--
+- src/app/ — routes and pages
+- src/components/ — shared UI
+- src/lib/ — utils, db client, helpers
+- src/types/ — shared type defs
+- docs/ — durable docs, written only by `doc`
+- work/ — transient planning docs and task lists
+- tests/ — test files mirror src/
+-->
+
+## kinds of artifacts
+
+- Work doc: `work/[name].md` describes the intended change. It is a transient work artifact and the source for a task list.
+- Doc: `docs/[name].md` captures current reality for a topic. It is the durable source of truth for current behavior; only `doc` creates or updates it.
+- Task list: `work/tasks/[name].md` links to one work doc or doc and breaks it into small, committable, trackable tasks. It is a transient work artifact and the implementation contract for `do`; check off tasks only after their acceptance criteria are met.
+
+## conventions
+
+<!-- FILL: non-obvious patterns only. skip what linters enforce. -->
+<!--
+- named exports, no default exports
+- colocate tests next to source
+- errors as values, not exceptions
+- no abbreviations in public APIs
+-->
+
+## voice
+
+- Use short, direct prose.
+- Drop filler and throat-clearing.
+- Keep technical details exact.
+- Do not say "I'll", "Sure!", "Great question", "Let me", or "Of course".
+- Do not restate the user's request before answering.
+- Do not add closing summaries.
+- Keep code, paths, and identifiers exact.
+
+## workflow
+
+The user names the mode by slash command or in prose. Read that mode file before acting. If not sure what is the mode, ask from the user.
+
+### modes
+
+#### design
+
+- command: `/cito-design`
+- when: translate an intention into a work doc
+- file: `.claude/agents/cito-design.md`
+
+#### do
+
+- command: `/cito-do`
+- when: execute one unblocked task from a task list
+- file: `.claude/agents/cito-do.md`
+
+#### doc
+
+- command: `/cito-doc`
+- when: capture current state as a durable doc
+- file: `.claude/agents/cito-doc.md`
+
+#### create-tasklist
+
+- command: `/cito-create-tasklist`
+- when: turn a work doc or doc into a committable, trackable work task list
+- file: `.claude/agents/cito-create-tasklist.md`
+
+### shared rules
+
+- Only `doc` creates or updates files in `docs/`.
+- The work task list is the contract for `do`; its `Source` link is the supporting work doc or doc.
+- A doc is ground truth for current state.
+- A work task list with a valid source link must exist before `do` starts.
+- If the source document and current code conflict, stop and resolve the conflict before coding.
+- Do not invent scope beyond the selected task or its source document.
+- Do not add dependencies. Raise that as an open question.
+- Do not change public APIs unless the source document says to.
+
+### process flow
+
+For a proposed change, use `/cito-design` to create `work/[name].md`, then `/cito-create-tasklist work/[name].md` to create `work/tasks/[name].md`, then `/cito-do work/tasks/[name].md` to execute the next unblocked task. For work that starts by documenting existing behavior, use `/cito-doc` to create `docs/[name].md`, then `/cito-create-tasklist docs/[name].md` to create `work/tasks/[name].md`, then `/cito-do work/tasks/[name].md`. Use `/cito-typo`, `/cito-comment`, or `/cito-add-test` only for their narrow requests; they bypass this flow and do not update `docs/`.
+
+### grunt tasks
+
+Use these only for narrow requests. They skip the mode pipeline.
+
+#### typo
+
+- command: `/cito-typo`
+- when: fix a typo or wording mistake, text only
+- file: `.claude/agents/cito-typo.md`
+
+#### comment
+
+- command: `/cito-comment`
+- when: add or improve a WHY-comment, no logic change
+- file: `.claude/agents/cito-comment.md`
+
+#### add-test
+
+- command: `/cito-add-test`
+- when: add a test for one file, matching existing convention
+- file: `.claude/agents/cito-add-test.md`
+
+### setup
+
+Setup runs right after cito-prompts is installed, and again when stack, commands, or structure drift.
+
+#### setup-project
+
+- command: `/cito-setup-project`
+- when: fill the FILL sections of both instruction copies
+- file: `.claude/agents/cito-setup-project.md`
+
+## rules
+
+<!-- FILL: hard project constraints. include reason so agent handles edge cases. -->
+<!--
+- no new dependencies without approval (keeps bundle size controlled)
+- all public functions need JSDoc (API surface is consumed externally)
+- no direct db queries outside src/lib/db (single point for query logic)
+-->
+
+- Do not change public APIs unless the task explicitly says to.
+- Do not add dependencies. Raise that in the design doc.
+
+## avoid
+
+<!-- FILL: known bad patterns or footguns specific to this project. -->
+<!--
+- do not use Date(), use dayjs (timezone handling)
+- do not put business logic in route handlers (testability)
+- do not import from @internal packages in public modules
+-->
+
+- Do not use `npm` or `npx`. This project is pnpm only.
+```
+
+### `.github/copilot-instructions.md`
+
+```md
+# [Project Name]
+
+<!--
+   cito-prompts v0.61.0 — .github/copilot-instructions.md
+   - GitHub Copilot copy of the project instructions.
+   - GitHub Copilot reads this path automatically.
+   - Claude Code uses `.claude/CLAUDE.md`.
+   - Keep both copies in sync when project facts change.
+   - `cito-setup-project` refreshes both.
+   - AGENTS.md at repo root points here for other tools.
+   - Mode files live in `.github/agents/cito-*.md`.
+   - No skill files. Fill FILL sections. Delete examples after filling.
+-->
+
+## identity
+
+<!-- FILL: one sentence. what this project is, who it serves. -->
+
+## stack
+
+<!-- FILL: tech, versions, key libs. example below. delete example after filling. -->
+<!--
+- lang: TypeScript 5.7 strict
+- framework: No framework, plain Express
+- styles: Vanilla CSS
+- db: sqlite
+- runtime: Node 24, pnpm
+-->
+
+## package manager
+
+- This project uses **pnpm**.
+- Use `pnpm` for package and script commands.
+- Do not use `npm` or `npx`.
+
+## commands
+
+<!-- FILL: every command the agent might need. most valuable section. -->
+<!--
+- install: `pnpm install`
+- dev: `pnpm dev`
+- build: `pnpm build`
+- test all: `pnpm test`
+- test one: `pnpm test -- path/to/file`
+- lint: `pnpm lint`
+- typecheck: `pnpm tsc --noEmit`
+- format: `pnpm format`
+- e2e: `pnpm exec playwright test`
+-->
+
+## browser verification
+
+- Use Playwright for visible behavior: UI, navigation, rendered output, screenshots, and bug repros.
+- run: `pnpm exec playwright test`
+- run one: `pnpm exec playwright test path/to/spec.ts`
+- browsers missing: `pnpm exec playwright install`
+- headed debug: `pnpm exec playwright test --headed`
+- Claude may use an MCP browser tool if one is configured.
+- Do not claim UI behavior works without checking it.
+
+## structure
+
+<!-- FILL: key dirs only. skip obvious ones (node_modules, .git). -->
+<!--
+- src/app/ — routes and pages
+- src/components/ — shared UI
+- src/lib/ — utils, db client, helpers
+- src/types/ — shared type defs
+- docs/ — durable docs, written only by `doc`
+- work/ — transient planning docs and task lists
+- tests/ — test files mirror src/
+-->
+
+## kinds of artifacts
+
+- Work doc: `work/[name].md` describes the intended change. It is a transient work artifact and the source for a task list.
+- Doc: `docs/[name].md` captures current reality for a topic. It is the durable source of truth for current behavior; only `doc` creates or updates it.
+- Task list: `work/tasks/[name].md` links to one work doc or doc and breaks it into small, committable, trackable tasks. It is a transient work artifact and the implementation contract for `do`; check off tasks only after their acceptance criteria are met.
+
+## conventions
+
+<!-- FILL: non-obvious patterns only. skip what linters enforce. -->
+<!--
+- named exports, no default exports
+- colocate tests next to source
+- errors as values, not exceptions
+- no abbreviations in public APIs
+-->
+
+## voice
+
+- Use short, direct prose.
+- Drop filler and throat-clearing.
+- Keep technical details exact.
+- Do not say "I'll", "Sure!", "Great question", "Let me", or "Of course".
+- Do not restate the user's request before answering.
+- Do not add closing summaries.
+- Keep code, paths, and identifiers exact.
+- If explanation is needed, use fact → reason → fix.
+- Bad: "The reason your component re-renders is because you're creating a new object reference on each render cycle."
+- Good: "New object ref each render. Inline object prop = new ref = re-render. Wrap in `useMemo`."
+
+## workflow
+
+The user names the mode. Read that mode file before acting.
+
+### modes
+
+#### design
+
+- when: translate an intention into a work doc
+- file: `.github/agents/cito-design.md`
+
+#### do
+
+- when: execute one unblocked task from a task list
+- file: `.github/agents/cito-do.md`
+
+#### doc
+
+- when: capture current state as a durable doc
+- file: `.github/agents/cito-doc.md`
+
+#### create-tasklist
+
+- when: turn a work doc or doc into a committable, trackable work task list
+- file: `.github/agents/cito-create-tasklist.md`
+
+### shared rules
+
+- Only `doc` creates or updates files in `docs/`.
+- The work task list is the contract for `do`; its `Source` link is the supporting work doc or doc.
+- A doc is ground truth for current state.
+- A work task list with a valid source link must exist before `do` starts.
+- If the source document and current code conflict, stop and resolve the conflict before coding.
+- Do not invent scope beyond the selected task or its source document.
+- Do not add dependencies. Raise that as an open question.
+- Do not change public APIs unless the source document says to.
+
+### process flow
+
+For a proposed change, use `cito-design` to create `work/[name].md`, then `cito-create-tasklist work/[name].md` to create `work/tasks/[name].md`, then `cito-do work/tasks/[name].md` to execute the next unblocked task. For work that starts by documenting existing behavior, use `cito-doc` to create `docs/[name].md`, then `cito-create-tasklist docs/[name].md` to create `work/tasks/[name].md`, then `cito-do work/tasks/[name].md`. Use `cito-typo`, `cito-comment`, or `cito-add-test` only for their narrow requests; they bypass this flow and do not update `docs/`.
+
+### grunt tasks
+
+Use these only for narrow requests. They skip the mode pipeline.
+
+#### typo
+
+- when: fix a typo or wording mistake, text only
+- file: `.github/agents/cito-typo.md`
+
+#### comment
+
+- when: add or improve a WHY-comment, no logic change
+- file: `.github/agents/cito-comment.md`
+
+#### add-test
+
+- when: add a test for one file, matching existing convention
+- file: `.github/agents/cito-add-test.md`
+
+### setup
+
+Setup runs right after cito-prompts is installed, and again when stack, commands, or structure drift.
+
+#### setup-project
+
+- when: fill the FILL sections of both instruction copies
+- file: `.github/agents/cito-setup-project.md`
+
+## rules
+
+<!-- FILL: hard project constraints. include reason so agent handles edge cases. -->
+<!--
+- no new dependencies without approval (keeps bundle size controlled)
+- all public functions need JSDoc (API surface is consumed externally)
+- no direct db queries outside src/lib/db (single point for query logic)
+-->
+
+- Do not change public APIs unless the task explicitly says to.
+- Do not add dependencies. Raise that in the design doc.
+
+## avoid
+
+<!-- FILL: known bad patterns or footguns specific to this project. -->
+<!--
+- do not use Date(), use dayjs (timezone handling)
+- do not put business logic in route handlers (testability)
+- do not import from @internal packages in public modules
+-->
+
+- Do not use `npm` or `npx`. This project is pnpm only.
+```
+
 ## procedure
 
-1. Read both target files in full. Treat `<!-- FILL: ... -->` markers as instructions and the commented blocks under them as examples.
+1. Read both target files in full when they exist. If either is missing, create it from the matching complete template above. Treat `<!-- FILL: ... -->` markers as instructions and the commented blocks under them as examples.
 2. Inspect repo evidence before writing:
    - manifests and lockfiles (`package.json`, `pnpm-lock.yaml`, `package-lock.json`, `yarn.lock`, `bun.lockb`, `pyproject.toml`, `uv.lock`, `Cargo.toml`, `go.mod`, `Gemfile`, ...)
    - config for language, build, lint, format, and test (`tsconfig.json`, `vite.config.*`, `eslint.*`, `biome.json`, `ruff.toml`, `Makefile`, `justfile`, CI workflows in `.github/workflows/`)

@@ -1,5 +1,5 @@
 ---
-metadata: cito-prompts version 0.60.0
+metadata: cito-prompts version 0.61.0
 name: cito-comment
 description: "Grunt mode for adding or improving WHY-comments on non-obvious code."
 ---

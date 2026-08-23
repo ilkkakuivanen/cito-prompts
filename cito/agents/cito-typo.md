@@ -1,5 +1,5 @@
 ---
-metadata: cito-prompts version 0.60.0
+metadata: cito-prompts version 0.61.0
 name: cito-typo
 description: "Grunt mode for fixing typos and wording mistakes with zero behavior risk."
 ---
