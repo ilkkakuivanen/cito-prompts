@@ -9,15 +9,18 @@ Doc-first AI dev workflow. One mode reads one file and touches one kind of artif
 /plugin install cito@cito-prompts
 ```
 
-## Modes
+## Agents
 
-- `/cito:add-test` — Grunt task — add a test for one file in the repo's existing style.
-- `/cito:comment` — Grunt task — add or improve WHY-comments on non-obvious code.
-- `/cito:create-tasklist` — Create a committable, trackable work task list from a work or docs document.
-- `/cito:design` — Design mode — turn an intention into a work doc.
-- `/cito:doc` — Doc mode — capture current state of a topic as a durable doc.
-- `/cito:do` — Do mode — execute one task-list item, stay in scope, verify the result.
-- `/cito:setup-project` — One-time setup — fill both instruction copies from the real repo.
-- `/cito:typo` — Grunt task — fix typos and wording mistakes. Text only.
+- `cito-add-test` — Grunt mode for adding one test in the repo's existing style.
+- `cito-comment` — Grunt mode for adding or improving WHY-comments on non-obvious code.
+- `cito-create-tasklist` — Create a committable, trackable work task list from one work or docs document.
+- `cito-design` — Mode for turning an intention into a design doc under work/.
+- `cito-doc` — Mode for capturing current state in a durable doc.
+- `cito-do` — Mode for executing one task-list item in scope and verifying the result.
+- `cito-investigate` — Mode for investigating a user-reported issue from first principles using observable facts and explicit checkpoints.
+- `cito-oppose-dissertation` — Mode for constructively challenging a design or other document to uncover meaningful gaps and improvement opportunities.
+- `cito-setup-project` — Setup mode for filling both instruction copies from the real repo.
+- `cito-typo` — Grunt mode for fixing typos and wording mistakes with zero behavior risk.
+- `cito-validate-doc` — Mode for checking whether documentation truthfully matches the implementation.
 
 _Generated from `versions/0.63.0/`, version 0.63.0. Do not hand-edit; regenerate with `scripts/build.sh`._
