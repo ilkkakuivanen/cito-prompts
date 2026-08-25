@@ -1,0 +1,10 @@
+{
+  "name": "cito",
+  "version": "0.64.0",
+  "description": "Doc-first AI dev workflow. One mode reads one file and touches one kind of artifact.",
+  "author": {
+    "name": "Ilkka Kuivanen",
+    "email": "ilkka.kuivanen@me.com"
+  },
+  "homepage": "https://github.com/ilkkakuivanen/cito-prompts"
+}

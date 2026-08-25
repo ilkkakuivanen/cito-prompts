@@ -4,10 +4,14 @@
     "name": "Ilkka Kuivanen",
     "email": "ilkka.kuivanen@me.com"
   },
+  "metadata": {
+    "description": "Doc-first AI dev workflow. One mode reads one file and touches one kind of artifact.",
+    "version": "0.64.0"
+  },
   "plugins": [
     {
       "name": "cito",
-      "source": "./claude/cito",
+      "source": "./copilot/cito",
       "description": "Doc-first AI dev workflow. One mode reads one file and touches one kind of artifact.",
       "version": "0.64.0"
     }

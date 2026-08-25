@@ -4,16 +4,25 @@ Doc-first AI dev workflow. One mode reads one file and touches one kind of artif
 
 ## Install
 
+### Claude Code
+
 ```
 /plugin marketplace add ilkkakuivanen/cito-prompts
 /plugin install cito@cito-prompts
+```
+
+### GitHub Copilot CLI
+
+```
+copilot plugin marketplace add ilkkakuivanen/cito-prompts
+copilot plugin install cito@cito-prompts
 ```
 
 ## Agents
 
 - `cito-add-test` — Grunt mode for adding one test in the repo's existing style.
 - `cito-comment` — Grunt mode for adding or improving WHY-comments on non-obvious code.
-- `cito-create-tasklist` — Create a committable, trackable work task list from one work or docs document.
+- `cito-create-tasklist` — Create a committable, trackable work task list from any source material.
 - `cito-design` — Mode for turning an intention into a design doc under work/.
 - `cito-doc` — Mode for capturing current state in a durable doc.
 - `cito-do` — Mode for executing one task-list item in scope and verifying the result.
@@ -23,4 +32,4 @@ Doc-first AI dev workflow. One mode reads one file and touches one kind of artif
 - `cito-typo` — Grunt mode for fixing typos and wording mistakes with zero behavior risk.
 - `cito-validate-doc` — Mode for checking whether documentation truthfully matches the implementation.
 
-_Generated from `versions/0.63.0/`, version 0.63.0. Do not hand-edit; regenerate with `scripts/build.sh`._
+_Generated from `versions/0.64.0/`, version 0.64.0. Do not hand-edit; regenerate with `bash scripts/build.sh`._
