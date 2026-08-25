@@ -1,5 +1,5 @@
 ---
-metadata: cito-prompts version 0.61.0
+metadata: cito-prompts version 0.63.0
 name: cito-do
 description: "Mode for executing one task-list item in scope and verifying the result."
 ---

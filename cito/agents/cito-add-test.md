@@ -1,5 +1,5 @@
 ---
-metadata: cito-prompts version 0.61.0
+metadata: cito-prompts version 0.63.0
 name: cito-add-test
 description: "Grunt mode for adding one test in the repo's existing style."
 ---

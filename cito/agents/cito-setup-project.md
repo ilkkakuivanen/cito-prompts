@@ -1,5 +1,5 @@
 ---
-metadata: cito-prompts version 0.61.0
+metadata: cito-prompts version 0.63.0
 name: cito-setup-project
 description: "Setup mode for filling both instruction copies from the real repo."
 ---
@@ -25,7 +25,7 @@ Use these complete templates when a target file is missing. When it exists, use 
 # [Project Name]
 
 <!--
-   cito-prompts v0.61.0 — .claude/CLAUDE.md
+   cito-prompts v0.63.0 — .claude/CLAUDE.md
    - Claude Code copy of the project instructions.
    - Root `CLAUDE.md` imports this file with `@.claude/CLAUDE.md`.
    - GitHub Copilot uses `.github/copilot-instructions.md`.
@@ -53,9 +53,11 @@ Use these complete templates when a target file is missing. When it exists, use 
 
 ## package manager
 
-- This project uses **pnpm**.
+<!-- FILL: match the real tool and update the matching line in **avoid**. If the project is not JS or TS, replace or drop the section. -->
+
+<!-- - This project uses **pnpm**.
 - Use `pnpm` for package and script commands.
-- Do not use `npm` or `npx`.
+- Do not use `npm` or `npx`. -->
 
 ## commands
 
@@ -74,13 +76,15 @@ Use these complete templates when a target file is missing. When it exists, use 
 
 ## browser verification
 
-- Use Playwright for visible behavior: UI, navigation, rendered output, screenshots, and bug repros.
+<!-- FILL: keep only for projects with a UI and browser test setup. Match the configured browser tool. -->
+
+<!-- - Use Playwright for visible behavior: UI, navigation, rendered output, screenshots, and bug repros.
 - run: `pnpm exec playwright test`
 - run one: `pnpm exec playwright test path/to/spec.ts`
 - browsers missing: `pnpm exec playwright install`
 - headed debug: `pnpm exec playwright test --headed`
 - Claude may use an MCP browser tool if one is configured.
-- Do not claim UI behavior works without checking it.
+- Do not claim UI behavior works without checking it. -->
 
 ## structure
 
@@ -98,7 +102,7 @@ Use these complete templates when a target file is missing. When it exists, use 
 ## kinds of artifacts
 
 - Work doc: `work/[name].md` describes the intended change. It is a transient work artifact and the source for a task list.
-- Doc: `docs/[name].md` captures current reality for a topic. It is the durable source of truth for current behavior; only `doc` creates or updates it.
+- Doc: `docs/[name].md` captures current reality for a topic. It is the durable source of truth for current behavior.
 - Task list: `work/tasks/[name].md` links to one work doc or doc and breaks it into small, committable, trackable tasks. It is a transient work artifact and the implementation contract for `do`; check off tasks only after their acceptance criteria are met.
 
 ## conventions
@@ -150,6 +154,24 @@ The user names the mode by slash command or in prose. Read that mode file before
 - command: `/cito-create-tasklist`
 - when: turn a work doc or doc into a committable, trackable work task list
 - file: `.claude/agents/cito-create-tasklist.md`
+
+#### validate-doc
+
+- command: `/cito-validate-doc`
+- when: compare a document with the implementation and report material deltas
+- file: `.claude/agents/cito-validate-doc.md`
+
+#### oppose-dissertation
+
+- command: `/cito-oppose-dissertation`
+- when: constructively challenge a design or other document for meaningful gaps and risks
+- file: `.claude/agents/cito-oppose-dissertation.md`
+
+#### investigate
+
+- command: `/cito-investigate`
+- when: trace a reported issue from observable facts to a root cause or next check
+- file: `.claude/agents/cito-investigate.md`
 
 ### shared rules
 
@@ -207,7 +229,6 @@ Setup runs right after cito-prompts is installed, and again when stack, commands
 - no direct db queries outside src/lib/db (single point for query logic)
 -->
 
-- Do not change public APIs unless the task explicitly says to.
 - Do not add dependencies. Raise that in the design doc.
 
 ## avoid
@@ -218,8 +239,6 @@ Setup runs right after cito-prompts is installed, and again when stack, commands
 - do not put business logic in route handlers (testability)
 - do not import from @internal packages in public modules
 -->
-
-- Do not use `npm` or `npx`. This project is pnpm only.
 ```
 
 ### `.github/copilot-instructions.md`
@@ -228,7 +247,7 @@ Setup runs right after cito-prompts is installed, and again when stack, commands
 # [Project Name]
 
 <!--
-   cito-prompts v0.61.0 — .github/copilot-instructions.md
+   cito-prompts v0.63.0 — .github/copilot-instructions.md
    - GitHub Copilot copy of the project instructions.
    - GitHub Copilot reads this path automatically.
    - Claude Code uses `.claude/CLAUDE.md`.
@@ -256,9 +275,11 @@ Setup runs right after cito-prompts is installed, and again when stack, commands
 
 ## package manager
 
-- This project uses **pnpm**.
+<!-- FILL: match the real tool and update the matching line in **avoid**. If the project is not JS or TS, replace or drop the section. -->
+
+<!-- - This project uses **pnpm**.
 - Use `pnpm` for package and script commands.
-- Do not use `npm` or `npx`.
+- Do not use `npm` or `npx`. -->
 
 ## commands
 
@@ -277,13 +298,15 @@ Setup runs right after cito-prompts is installed, and again when stack, commands
 
 ## browser verification
 
-- Use Playwright for visible behavior: UI, navigation, rendered output, screenshots, and bug repros.
+<!-- FILL: keep only for projects with a UI and browser test setup. Match the configured browser tool. -->
+
+<!-- - Use Playwright for visible behavior: UI, navigation, rendered output, screenshots, and bug repros.
 - run: `pnpm exec playwright test`
 - run one: `pnpm exec playwright test path/to/spec.ts`
 - browsers missing: `pnpm exec playwright install`
 - headed debug: `pnpm exec playwright test --headed`
 - Claude may use an MCP browser tool if one is configured.
-- Do not claim UI behavior works without checking it.
+- Do not claim UI behavior works without checking it. -->
 
 ## structure
 
@@ -353,6 +376,21 @@ The user names the mode. Read that mode file before acting.
 - when: turn a work doc or doc into a committable, trackable work task list
 - file: `.github/agents/cito-create-tasklist.md`
 
+#### validate-doc
+
+- when: compare a document with the implementation and report material deltas
+- file: `.github/agents/cito-validate-doc.md`
+
+#### oppose-dissertation
+
+- when: constructively challenge a design or other document for meaningful gaps and risks
+- file: `.github/agents/cito-oppose-dissertation.md`
+
+#### investigate
+
+- when: trace a reported issue from observable facts to a root cause or next check
+- file: `.github/agents/cito-investigate.md`
+
 ### shared rules
 
 - Only `doc` creates or updates files in `docs/`.
@@ -405,7 +443,6 @@ Setup runs right after cito-prompts is installed, and again when stack, commands
 - no direct db queries outside src/lib/db (single point for query logic)
 -->
 
-- Do not change public APIs unless the task explicitly says to.
 - Do not add dependencies. Raise that in the design doc.
 
 ## avoid
@@ -416,8 +453,6 @@ Setup runs right after cito-prompts is installed, and again when stack, commands
 - do not put business logic in route handlers (testability)
 - do not import from @internal packages in public modules
 -->
-
-- Do not use `npm` or `npx`. This project is pnpm only.
 ```
 
 ## procedure
@@ -443,8 +478,8 @@ Setup runs right after cito-prompts is installed, and again when stack, commands
 6. If evidence is missing, leave the section open and note the question.
 7. Verify:
    - run the commands you wrote for install, typecheck, lint, and test when they exist
-   - diff the two files
-   - allow only the banner and workflow path differences
+   - compare the shared project facts in both files: identity, stack, commands, structure, conventions, rules, and avoid
+   - allow the documented client-specific template differences, including banner text, mode paths and commands, and sections that one template marks as conditional
 8. Report what you filled, what stayed open, and any command failures.
 
 ## boundaries

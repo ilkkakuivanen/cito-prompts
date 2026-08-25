@@ -20,4 +20,4 @@ Doc-first AI dev workflow. One mode reads one file and touches one kind of artif
 - `/cito:setup-project` — One-time setup — fill both instruction copies from the real repo.
 - `/cito:typo` — Grunt task — fix typos and wording mistakes. Text only.
 
-_Generated from `versions/0.61.0/`, version 0.61.0. Do not hand-edit; regenerate with `scripts/build.sh`._
+_Generated from `versions/0.63.0/`, version 0.63.0. Do not hand-edit; regenerate with `scripts/build.sh`._
